@@ -1,5 +1,4 @@
-# robbiemultiversemadness
-*Robbie & the Multiverse of Madness*
+# Robbie & the Multiverse of Madness
 I made this by following along with a lesson from the ThreeJS Journey course.
 The final lesson has you build a game with React Three Fiber.
 I added a few small personal touches to have some fun with it.
