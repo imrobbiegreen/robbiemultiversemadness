@@ -21,31 +21,43 @@ export default function Interface() {
   const rightward = useKeyboardControls((state) => state.rightward);
   const jump = useKeyboardControls((state) => state.jump);
 
-  const handleForwardClick = () => {
+  const handleForwardButtonPress = () => {
     setIsMovingForward(true);
   };
 
-  const handleBackwardClick = () => {
+  const handleForwardButtonRelease = () => {
+    setIsMovingForward(false);
+  };
+
+  const handleBackwardButtonPress = () => {
     setIsMovingBackward(true);
   };
 
-  const handleLeftwardClick = () => {
+  const handleBackwardButtonRelease = () => {
+    setIsMovingBackward(false);
+  };
+
+  const handleLeftwardButtonPress = () => {
     setIsMovingLeftward(true);
   };
 
-  const handleRightwardClick = () => {
+  const handleLeftwardButtonRelease = () => {
+    setIsMovingLeftward(false);
+  };
+
+  const handleRightwardButtonPress = () => {
     setIsMovingRightward(true);
   };
 
-  const handleJumpClick = () => {
+  const handleRightwardButtonRelease = () => {
+    setIsMovingRightward(false);
+  };
+
+  const handleJumpButtonPress = () => {
     setIsJumping(true);
   };
 
-  const handleControlButtonRelease = () => {
-    setIsMovingForward(false);
-    setIsMovingBackward(false);
-    setIsMovingLeftward(false);
-    setIsMovingRightward(false);
+  const handleJumpButtonRelease = () => {
     setIsJumping(false);
   };
 
@@ -70,19 +82,45 @@ export default function Interface() {
   }, []);
 
   useEffect(() => {
+    const handleKeyPress = (event) => {
+      if (event.key === 'ArrowUp') setIsMovingForward(true);
+      else if (event.key === 'ArrowDown') setIsMovingBackward(true);
+      else if (event.key === 'ArrowLeft') setIsMovingLeftward(true);
+      else if (event.key === 'ArrowRight') setIsMovingRightward(true);
+      else if (event.key === ' ') setIsJumping(true);
+    };
+
+    const handleKeyRelease = (event) => {
+      if (event.key === 'ArrowUp') setIsMovingForward(false);
+      else if (event.key === 'ArrowDown') setIsMovingBackward(false);
+      else if (event.key === 'ArrowLeft') setIsMovingLeftward(false);
+      else if (event.key === 'ArrowRight') setIsMovingRightward(false);
+      else if (event.key === ' ') setIsJumping(false);
+    };
+
+    window.addEventListener('keydown', handleKeyPress);
+    window.addEventListener('keyup', handleKeyRelease);
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyPress);
+      window.removeEventListener('keyup', handleKeyRelease);
+    };
+  }, []);
+
+  useEffect(() => {
     // Your game logic using the movement states
     // For example:
-    if (isMovingForward) {
+    if (isMovingForward || forward) {
       // Move player forward
-    } else if (isMovingBackward) {
+    } else if (isMovingBackward || backward) {
       // Move player backward
-    } else if (isMovingLeftward) {
+    } else if (isMovingLeftward || leftward) {
       // Move player leftward
-    } else if (isMovingRightward) {
+    } else if (isMovingRightward || rightward) {
       // Move player rightward
     }
 
-    if (isJumping) {
+    if (isJumping || jump) {
       // Perform player jump
     }
   }, [
@@ -91,6 +129,11 @@ export default function Interface() {
     isMovingLeftward,
     isMovingRightward,
     isJumping,
+    forward,
+    backward,
+    leftward,
+    rightward,
+    jump,
   ]);
 
   return (
@@ -112,37 +155,32 @@ export default function Interface() {
         <div className="raw">
           <div
             className={`key ${isMovingForward ? 'active' : ''}`}
-            onClick={handleForwardClick}
-            onMouseUp={handleControlButtonRelease}
-            onMouseLeave={handleControlButtonRelease}
+            onMouseDown={handleForwardButtonPress}
+            onMouseUp={handleForwardButtonRelease}
           ></div>
         </div>
         <div className="raw">
           <div
             className={`key ${isMovingLeftward ? 'active' : ''}`}
-            onClick={handleLeftwardClick}
-            onMouseUp={handleControlButtonRelease}
-            onMouseLeave={handleControlButtonRelease}
+            onMouseDown={handleLeftwardButtonPress}
+            onMouseUp={handleLeftwardButtonRelease}
           ></div>
           <div
             className={`key ${isMovingBackward ? 'active' : ''}`}
-            onClick={handleBackwardClick}
-            onMouseUp={handleControlButtonRelease}
-            onMouseLeave={handleControlButtonRelease}
+            onMouseDown={handleBackwardButtonPress}
+            onMouseUp={handleBackwardButtonRelease}
           ></div>
           <div
             className={`key ${isMovingRightward ? 'active' : ''}`}
-            onClick={handleRightwardClick}
-            onMouseUp={handleControlButtonRelease}
-            onMouseLeave={handleControlButtonRelease}
+            onMouseDown={handleRightwardButtonPress}
+            onMouseUp={handleRightwardButtonRelease}
           ></div>
         </div>
         <div className="raw">
           <div
             className={`key large ${isJumping ? 'active' : ''}`}
-            onClick={handleJumpClick}
-            onMouseUp={handleControlButtonRelease}
-            onMouseLeave={handleControlButtonRelease}
+            onMouseDown={handleJumpButtonPress}
+            onMouseUp={handleJumpButtonRelease}
           ></div>
         </div>
       </div>
